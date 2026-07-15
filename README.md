@@ -2,6 +2,11 @@
 
 A software tool developed with Visual Basic (GUI) and Python (backend) for controlling  BMW light modules.
 
+**Requirements:**
+* Windows 10
+* Installed BMW Standard Tools (EDIABAS)
+* K+DCAN cable
+  
 ### Features
 - **Light Show:** Custom sequence control for supported BMW light modules.
 - **Music Light Show:** Real-time light synchronization using microphone input to detect bass.
