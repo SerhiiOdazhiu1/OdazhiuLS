@@ -9,7 +9,50 @@ Public Class Form1
     Private musicSettingForm As Form
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        cmbChassis.Items.Add("E38")
+        cmbChassis.Items.Add("E39")
+        cmbChassis.Items.Add("E46")
+        cmbChassis.Items.Add("E53")
+        cmbChassis.Items.Add("E60-E61")
+        cmbChassis.Items.Add("E63-E64")
+        cmbChassis.Items.Add("E65-E66")
+        cmbChassis.Items.Add("E70-E71-E72")
+        cmbChassis.Items.Add("E81-E82-E87-E88")
+        cmbChassis.Items.Add("E83")
+        cmbChassis.Items.Add("E84")
+        cmbChassis.Items.Add("E85-E86")
+        cmbChassis.Items.Add("E89")
+        cmbChassis.Items.Add("E90-E91-E92-E93")
+
+        picCar.SizeMode = PictureBoxSizeMode.StretchImage
+        picCar.Image = Image.FromFile(Application.StartupPath & "\images\BMW.jpg")
+
+        btnCustom.Enabled = False
+        btnMusic.Enabled = False
+        btnDefault.Enabled = False
         btnStop.Enabled = False
+    End Sub
+
+    Private Sub cmbChassis_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbChassis.SelectedIndexChanged
+        btnCustom.Enabled = True
+        btnDefault.Enabled = True
+        btnMusic.Enabled = True
+
+        Dim chassisName As String = cmbChassis.SelectedItem.ToString
+
+        Dim pathJPG As String = Application.StartupPath & "\images\" & chassisName & ".jpg"
+        Dim pathPNG As String = Application.StartupPath & "\images\" & chassisName & ".png"
+        Dim pathJFIF As String = Application.StartupPath & "\images\" & chassisName & ".jfif"
+
+        If System.IO.File.Exists(pathJPG) Then
+            picCar.Image = Image.FromFile(pathJPG)
+        ElseIf System.IO.File.Exists(pathPNG) Then
+            picCar.Image = Image.FromFile(pathPNG)
+        ElseIf System.IO.File.Exists(pathJFIF) Then
+            picCar.Image = Image.FromFile(pathJFIF)
+        Else
+            picCar.Image = Nothing
+        End If
     End Sub
 
     Private Sub tmrStartTime_Tick(sender As Object, e As EventArgs) Handles tmrStartTime.Tick
@@ -215,4 +258,5 @@ Public Class Form1
 
         Return True
     End Function
+
 End Class
