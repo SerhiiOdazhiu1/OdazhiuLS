@@ -163,7 +163,7 @@ class frm_87Module(BMWLightModule):             # E81, E82, E87, E88, E90-93
                 self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{light};{pwm}")
             time.sleep(0.04)
 
-class lm_60Module(BMWLightModule):             # E60-64 prelci
+class lm_60Module(BMWLightModule):             # E60, E61, E63, E64
     def __init__(self, bmw_connection):
         super().__init__(ecu="LM_60", bmw_connection=bmw_connection)
         self.lights_show = [
@@ -201,3 +201,40 @@ class lm_60Module(BMWLightModule):             # E60-64 prelci
                 self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{light};{pwm}")
             time.sleep(0.04)
 
+class lm_65Module(BMWLightModule):             # E65, E66
+    def __init__(self, bmw_connection):
+        super().__init__(ecu="LM_65", bmw_connection=bmw_connection)
+        self.lights_show = [
+            "AUSGANG_FRA_RECHTS_VORN_1",
+            "AUSGANG_BEGRL_RECHTS",
+            "AUSGANG_BEGRL_LINKS",
+            "AUSGANG_FRA_LINKS_VORN_1",
+            "AUSGANG_NSW_LINKS",
+            "AUSGANG_NSW_RECHTS",
+        ]
+        self.music_show = [
+            ["AUSGANG_FL_LINKS", "AUSGANG_FL_RECHTS", "AUSGANG_NSW_LINKS", "AUSGANG_NSW_RECHTS"],
+            ["AUSGANG_FRA_RECHTS_VORN_1", "AUSGANG_FRA_LINKS_VORN_1", "AUSGANG_NSW_LINKS", "AUSGANG_NSW_RECHTS"],
+            ["AUSGANG_FL_LINKS", "AUSGANG_FL_RECHTS"],
+            ["AUSGANG_FRA_RECHTS_VORN_1", "AUSGANG_FRA_LINKS_VORN_1"]
+        ]
+
+    def turn_on(self, lights):
+        self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{lights};100")
+        print(f"{self._ecu}: STEUERN_LAMPEN_PWM: {lights} [*]")
+
+    def turn_off(self, lights):
+        self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{lights};0")
+        print(f"{self._ecu}: STEUERN_LAMPEN_PWM: {lights} [*]")
+
+    def farewell(self):
+        for light in self.lights_show:
+            self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{light};100")
+            time.sleep(0.15)
+
+        time.sleep(1.0)
+
+        for pwm in range(100, -1, -10):
+            for light in self.lights_show:
+                self.bmw.job(self._ecu, "STEUERN_LAMPEN_PWM", f"{light};{pwm}")
+            time.sleep(0.04)
