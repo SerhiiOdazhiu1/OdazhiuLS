@@ -19,22 +19,20 @@ Public Class Form1
         cmbChassis.Items.Add("E70-E71-E72")
         cmbChassis.Items.Add("E81-E82-E87-E88")
         cmbChassis.Items.Add("E83")
-        cmbChassis.Items.Add("E84")
-        cmbChassis.Items.Add("E85-E86")
-        cmbChassis.Items.Add("E89")
+        'cmbChassis.Items.Add("E85-E86")
         cmbChassis.Items.Add("E90-E91-E92-E93")
 
         picCar.SizeMode = PictureBoxSizeMode.StretchImage
         picCar.Image = Image.FromFile(Application.StartupPath & "\images\BMW.jpg")
 
-        btnCustom.Enabled = False
+        'btnCustom.Enabled = False
         btnMusic.Enabled = False
         btnDefault.Enabled = False
         btnStop.Enabled = False
     End Sub
 
     Private Sub cmbChassis_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbChassis.SelectedIndexChanged
-        btnCustom.Enabled = True
+        'btnCustom.Enabled = True
         btnDefault.Enabled = True
         btnMusic.Enabled = True
 
@@ -115,7 +113,7 @@ Public Class Form1
         txtTime.ReadOnly = False
         txtTime.Text = ""
 
-        btnCustom.Enabled = True
+        'btnCustom.Enabled = True
         btnDefault.Enabled = True
         btnMusic.Enabled = True
         btnStop.Enabled = False
@@ -131,10 +129,10 @@ Public Class Form1
     End Sub
 
     'Кнопка кастомного шоу
-    Private Sub btnCustom_Click(sender As Object, e As EventArgs) Handles btnCustom.Click
+    Private Sub btnCustom_Click(sender As Object, e As EventArgs)
         If Not ChecTime() Then Return
 
-        If Form2.ShowDialog() = DialogResult.OK Then
+        If Form2.ShowDialog = DialogResult.OK Then
             StartCountdown("Custom")
         End If
     End Sub
@@ -157,7 +155,7 @@ Public Class Form1
         vybraneShow = showType
 
         btnStop.Enabled = True
-        btnCustom.Enabled = False
+        'btnCustom.Enabled = False
         btnDefault.Enabled = False
         btnMusic.Enabled = False
 

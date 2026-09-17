@@ -27,7 +27,6 @@ Partial Class Form1
         btnDefault = New Button()
         btnStop = New Button()
         btnMusic = New Button()
-        btnCustom = New Button()
         lblTime = New Label()
         txtTime = New TextBox()
         tmrStartTime = New Timer(components)
@@ -43,9 +42,9 @@ Partial Class Form1
         ' btnDefault
         ' 
         btnDefault.Font = New Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, CByte(204))
-        btnDefault.Location = New Point(144, 141)
+        btnDefault.Location = New Point(210, 141)
         btnDefault.Name = "btnDefault"
-        btnDefault.Size = New Size(126, 95)
+        btnDefault.Size = New Size(192, 95)
         btnDefault.TabIndex = 0
         btnDefault.Text = "Default Show"
         btnDefault.UseVisualStyleBackColor = True
@@ -65,20 +64,10 @@ Partial Class Form1
         btnMusic.Font = New Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, CByte(204))
         btnMusic.Location = New Point(12, 141)
         btnMusic.Name = "btnMusic"
-        btnMusic.Size = New Size(126, 95)
+        btnMusic.Size = New Size(192, 95)
         btnMusic.TabIndex = 8
         btnMusic.Text = "Music Show"
         btnMusic.UseVisualStyleBackColor = True
-        ' 
-        ' btnCustom
-        ' 
-        btnCustom.Font = New Font("Segoe UI", 13.8F, FontStyle.Bold, GraphicsUnit.Point, CByte(204))
-        btnCustom.Location = New Point(276, 141)
-        btnCustom.Name = "btnCustom"
-        btnCustom.Size = New Size(126, 95)
-        btnCustom.TabIndex = 9
-        btnCustom.Text = "Custom Show"
-        btnCustom.UseVisualStyleBackColor = True
         ' 
         ' lblTime
         ' 
@@ -157,7 +146,6 @@ Partial Class Form1
         ClientSize = New Size(414, 332)
         Controls.Add(picCar)
         Controls.Add(grpSetting)
-        Controls.Add(btnCustom)
         Controls.Add(btnMusic)
         Controls.Add(btnStop)
         Controls.Add(btnDefault)
@@ -180,7 +168,6 @@ Partial Class Form1
     Friend WithEvents Button3 As Button
     Friend WithEvents btnStop As Button
     Friend WithEvents btnMusic As Button
-    Friend WithEvents btnCustom As Button
     Friend WithEvents lblTime As Label
     Friend WithEvents txtTime As TextBox
     Friend WithEvents tmrStartTime As Timer
