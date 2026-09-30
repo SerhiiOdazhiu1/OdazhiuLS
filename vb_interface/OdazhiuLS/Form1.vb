@@ -61,19 +61,15 @@ Public Class Form1
             tmrStartTime.Stop()
             'txtTime.Text = "Start!"
 
+            Dim nameChassis As String = cmbChassis.SelectedItem.ToString
+
             Select Case vybraneShow
                 Case "Default"
-                    Dim timeOn As String = "0.1"
-                    Dim timeOff As String = "0.03"
-                    Dim cycle As String = "8"
-                    Dim argumentLamps As String = "FL_L,FL_R,REL_NSW,BLK_LV,SL_LV,FL_L,FL_R,SL_RV,BLK_RV"
-                    Dim allArguments As String = $"{timeOn} {timeOff} {cycle} {argumentLamps}"
-
-                    RunPythonScript("light_show.py", allArguments)
+                    RunPythonScript("light_show.py", nameChassis)
 
                 Case "Music"
                     OpenMusicSettingsForm()
-                    RunPythonScript("music_show.py", "")
+                    RunPythonScript("music_show.py", nameChassis)
 
                 Case "Custom"
                     Dim timeOn As String = Form2.finalTimeIg
@@ -219,8 +215,10 @@ Public Class Form1
             musicSettingForm.Close()
         End If
 
+        Dim nameChassis As String = cmbChassis.SelectedItem.ToString
+
         Try
-            Dim forceStopLight As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), "light_show.py stop")
+            Dim forceStopLight As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), $"light_show.py {nameChassis} stop")
             forceStopLight.CreateNoWindow = True
             forceStopLight.UseShellExecute = False
             Process.Start(forceStopLight)
@@ -228,7 +226,7 @@ Public Class Form1
         End Try
 
         Try
-            Dim forceStopMusic As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), "music_show.py stop")
+            Dim forceStopMusic As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), $"music_show.py {nameChassis} stop")
             forceStopMusic.CreateNoWindow = True
             forceStopMusic.UseShellExecute = False
             Process.Start(forceStopMusic)
