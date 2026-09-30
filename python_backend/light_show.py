@@ -12,66 +12,46 @@ if hasattr(os, 'add_dll_directory'):
 
 import time
 from pydiabas import PyDIABAS
+from bmw_moduls import get_module_for_chassis
 
-def run_dynamic_show(bmw, on_time, off_time, cycles, lamps_list):
-    for i in range(cycles):
-        for light in lamps_list:
-            print(f"[*] {light}")
-            bmw.job("LSZ_2", "STEUERN_IO", light)
-            time.sleep(on_time)
-
-            print(f"[-] {light}")
-            bmw.job("LSZ_2", "DIAGNOSE_ENDE")
-
-            if off_time > 0:
-                time.sleep(off_time)
-
-    time.sleep(0.3)
-
-    all_front_lights = ["SL_LV", "SL_RV", "BLK_LV", "REL_NSW", "FL_L", "FL_R", "BLK_RV"]
-    bmw.job("LSZ_2", "STEUERN_IO", all_front_lights)
-
-    time.sleep(1.0)
-
+ON_TIME = 0.1
+OFF_TIME = 0.03
+CYCLES = 8
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and sys.argv[1].lower() == 'stop':
+    if len(sys.argv) < 2:
+        print("Error")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+    chassis = sys.argv[1]
+
+    if len(sys.argv) >= 3 and sys.argv[2].lower() == 'stop':
         try:
             with PyDIABAS() as bmw:
-                bmw.job("LSZ_2", "DIAGNOSE_ENDE")
+                module = get_module_for_chassis(chassis, bmw)
+                module.stop()
         except:
             pass
         sys.exit(0)
 
-    if len(sys.argv) < 5:
-        print("Error:")
-        input("Press Enter to exit.")
-        sys.exit(1)
-
-    try:
-        on_time = float(sys.argv[1].replace(',', '.'))
-        off_time = float(sys.argv[2].replace(',', '.'))
-        cycles = int(sys.argv[3])
-
-        lamps_raw = sys.argv[4]
-        lamps_list = lamps_raw.split(',')
-
-    except ValueError as e:
-        print("Error")
-        sys.exit(1)
-
     try:
         with PyDIABAS() as bmw:
             try:
-                run_dynamic_show(bmw, on_time, off_time, cycles, lamps_list)
+                module = get_module_for_chassis(chassis, bmw)
+                module.connect()
+                module.lights_show_run(CYCLES, OFF_TIME, ON_TIME)
 
             except KeyboardInterrupt:
+                module = get_module_for_chassis(chassis, bmw)
+                module.stop()
                 print("\n Stopped via interface (Stop)")
             except Exception as inner_e:
                 print(f"\n Error during the show: {inner_e}")
             finally:
                 try:
-                    bmw.job("LSZ_2", "DIAGNOSE_ENDE")
+                    module = get_module_for_chassis(chassis, bmw)
+                    module.stop()
                 except:
                     pass
     except Exception as e:

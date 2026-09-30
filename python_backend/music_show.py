@@ -1,7 +1,6 @@
 import sys
 import os
 import time
-import random
 import numpy as np
 import sounddevice as sd
 
@@ -13,19 +12,11 @@ if hasattr(os, 'add_dll_directory'):
         pass
 
 from pydiabas import PyDIABAS
+from bmw_moduls import get_module_for_chassis
 
 CHUNK = 1024
 RATE = 44100
 BASS_MAX_FREQ = 140
-
-COOLDOWN = 0.06
-
-LIGHT_COMBOS = [
-    ["FL_L", "FL_R"],
-    ["BLK_LV", "BLK_RV"],
-    ["FL_L", "FL_R", "REL_NSW"],
-    ["BLK_LV", "BLK_RV", "REL_NSW"]
-]
 
 freqs = np.fft.rfftfreq(CHUNK, 1.0 / RATE)
 bass_mask = freqs < BASS_MAX_FREQ
@@ -38,7 +29,7 @@ def get_bass_volume(indata):
     return np.mean(bass_fft)
 
 
-def run_music_show():
+def run_music_show(chassis):
     current_threshold = 25.0
     last_file_read = 0.0
 
@@ -47,6 +38,8 @@ def run_music_show():
     try:
         with PyDIABAS() as bmw:
             with sd.InputStream(samplerate=RATE, channels=1, blocksize=CHUNK) as stream:
+                module = get_module_for_chassis(chassis, bmw)
+                module.connect()
 
                 while True:
                     now = time.time()
@@ -69,13 +62,8 @@ def run_music_show():
                     if bass_vol > current_threshold:
                         print(f"\r[ Бас ] {bar:<50} (Vol: {bass_vol:.1f})", end="", flush=True)
 
-                        random_lights = random.choice(LIGHT_COMBOS)
-
-                        bmw.job("LSZ_2", "STEUERN_IO", random_lights)
-                        time.sleep(0.03)
-                        bmw.job("LSZ_2", "DIAGNOSE_ENDE")
-
-                        time.sleep(COOLDOWN)
+                        module.music_beat()
+                        time.sleep(module.cooldown)
 
                         stream.read(stream.read_available)
                     else:
@@ -85,7 +73,8 @@ def run_music_show():
         print("\n\n The music show has been stopped.")
         try:
             with PyDIABAS() as bmw:
-                bmw.job("LSZ_2", "DIAGNOSE_ENDE")
+                module = get_module_for_chassis(chassis, bmw)
+                module.stop()
         except:
             pass
     except Exception as e:
@@ -93,12 +82,20 @@ def run_music_show():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and sys.argv[1].lower() == "stop":
+    if len(sys.argv) < 2:
+        print("Error!")
+        input("Press Enter to exit.")
+        sys.exit(1)
+
+    chassis = sys.argv[1]
+
+    if len(sys.argv) >= 3 and sys.argv[2].lower() == "stop":
         try:
             with PyDIABAS() as bmw:
-                bmw.job("LSZ_2", "DIAGNOSE_ENDE")
+                module = get_module_for_chassis(chassis, bmw)
+                module.stop()
         except:
             pass
         sys.exit(0)
 
-    run_music_show()
+    run_music_show(chassis)

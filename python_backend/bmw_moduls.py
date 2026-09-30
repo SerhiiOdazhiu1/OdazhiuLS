@@ -17,7 +17,7 @@ class BMWLightModule:
         self._ecu = ecu
         self.bmw = bmw_connection
         self.flash_time = 0.015
-        self.cooldowm = 0.03
+        self.cooldown = 0.03
 
     def connect(self):
         print("Connecting to", self._ecu)
