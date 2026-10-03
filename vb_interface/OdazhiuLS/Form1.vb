@@ -86,7 +86,8 @@ Public Class Form1
     Private Sub RunPythonScript(scriptName As String, arguments As String)
         Try
             Dim pInfo As New ProcessStartInfo
-            pInfo.FileName = Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe")
+            Dim portablePython As String = IO.Path.Combine(Application.StartupPath, "python_portable\python.exe")
+            pInfo.FileName = portablePython
             pInfo.Arguments = $"{scriptName} {arguments}"
             pInfo.WorkingDirectory = Application.StartupPath
 
@@ -187,12 +188,12 @@ Public Class Form1
         trkThreshold.Size = New Size(300, 45)
         trkThreshold.Location = New Point(12, 32)
 
-        File.WriteAllText(Application.StartupPath & "\threshold.txt", "25")
+        File.WriteAllText(IO.Path.Combine(Application.StartupPath, "threshold.txt"), "25")
 
         AddHandler trkThreshold.ValueChanged, Sub(sender As Object, e As EventArgs)
                                                   lblValue.Text = "Threshold: " & trkThreshold.Value.ToString()
                                                   Try
-                                                      File.WriteAllText(Application.StartupPath & "\threshold.txt", trkThreshold.Value.ToString())
+                                                      File.WriteAllText(IO.Path.Combine(Application.StartupPath, "threshold.txt"), trkThreshold.Value.ToString())
                                                   Catch ex As Exception
                                                   End Try
                                               End Sub
@@ -217,8 +218,11 @@ Public Class Form1
 
         Dim nameChassis As String = cmbChassis.SelectedItem.ToString
 
+        Dim portablePython As String = IO.Path.Combine(Application.StartupPath, "python_portable\python.exe")
+
         Try
-            Dim forceStopLight As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), $"light_show.py {nameChassis} stop")
+            Dim forceStopLight As New ProcessStartInfo(portablePython, $"light_show.py {nameChassis} stop")
+            forceStopLight.WorkingDirectory = Application.StartupPath
             forceStopLight.CreateNoWindow = True
             forceStopLight.UseShellExecute = False
             Process.Start(forceStopLight)
@@ -226,7 +230,8 @@ Public Class Form1
         End Try
 
         Try
-            Dim forceStopMusic As New ProcessStartInfo(Path.Combine(Application.StartupPath, ".venv\Scripts\python.exe"), $"music_show.py {nameChassis} stop")
+            Dim forceStopMusic As New ProcessStartInfo(portablePython, $"music_show.py {nameChassis} stop")
+            forceStopMusic.WorkingDirectory = Application.StartupPath
             forceStopMusic.CreateNoWindow = True
             forceStopMusic.UseShellExecute = False
             Process.Start(forceStopMusic)
